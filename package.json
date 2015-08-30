@@ -1,0 +1,30 @@
+{
+  "name": "code_challenger",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "browserify-middleware": "^7.0.0",
+    "lodash": "^3.10.1",
+    "flux": "^2.1.1",
+    "express": "^4.13.3",
+    "jquery": "^2.1.4",
+    "less-middleware": "^2.0.1",
+    "react": "^0.13.3",
+    "reactify": "^1.1.1",
+    "react-addons": "^0.9.1-deprecated"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antoinemichaud/code-challenger.git"
+  },
+  "author": "Antoine Michaud",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/antoinemichaud/code-challenger/issues"
+  }
+}
