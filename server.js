@@ -3,8 +3,11 @@ var browserify = require('browserify-middleware');
 var lessMiddleware = require('less-middleware');
 var request = require('request');
 var Promise = require('bluebird');
+var _ = require('lodash');
 
+var requestAsync = Promise.promisify(request);
 var getRequestAsync = Promise.promisify(request.get);
+
 var app = express();
 
 var packages = ['jquery', 'react', 'lodash', 'flux'];
@@ -25,11 +28,28 @@ app.get('/js/bundle.js', browserify('./scripts/app.jsx', {
   ]]
 }));
 
-app.get('/scores', function (req, res) {
-  getRequestAsync('http://localhost:3000/httpsuccess').spread(
-    function (response, body) {
-      res.send(body);
-    });
+app.get('/scores', function (request, response) {
+  requestAsync('http://localhost:8081/generateGameTest').bind(response)
+    .spread(function (questionsQueryResponse, questionsQueryBody) {
+      return JSON.parse(questionsQueryBody);
+    })
+    .map(function (question) {
+      return Promise.props({
+        question: question,
+        candidateResult: requestAsync('http://localhost:8080/displayScore?player1Name=albert&player1Score=7&player2Name=Roger&player2Score=5')
+          .spread(function (candidateResultResponse, candidateResultBody) {
+            return candidateResultBody;
+          }),
+        referenceResult: requestAsync('http://localhost:8080/displayScore?player1Name=albert&player1Score=7&player2Name=Roger&player2Score=5')
+          .spread(function (referenceResultResponse, referenceResultBody) {
+            return referenceResultBody;
+          })
+      });
+    })
+    .then(function (results) {
+      return this.send(results);
+    })
+  ;
 });
 
 app.get('/httpsuccess', function (req, res) {
