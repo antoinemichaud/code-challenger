@@ -46,10 +46,15 @@ app.get('/scores', function (request, response) {
           })
       });
     })
-    .then(function (results) {
-      return this.send(results);
+    .map(function (result) {
+      return result.candidateResult === result.referenceResult;
     })
-  ;
+    .reduce(function (aggregation, comparisonResult) {
+      return aggregation && comparisonResult;
+    }, true)
+    .then(function (result) {
+      this.send(result);
+    });
 });
 
 app.get('/httpsuccess', function (req, res) {
